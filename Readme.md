@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Александр Нерсесян](https://up.htmlacademy.ru/ecmascript/20/user/2328283).
-* Наставник: [Артур Галимов](https://htmlacademy.ru/profile/id1237543).
+* Студент: [Stanislav Belov](https://up.htmlacademy.ru/ecmascript/20/user/1918511).
+* Наставник: Дмитрий (sench) Железцов.
 
 ---
 
@@ -48,5 +48,5 @@ git clone SSH-адрес_вашего_форка
 
 Репозиторий создан для обучения на профессиональном курсе «[JavaScript. Архитектура клиентских приложений](https://htmlacademy.ru/intensive/ecmascript)» от [HTML Academy](https://htmlacademy.ru).
 
-[check-image]: https://github.com/htmlacademy-ecmascript/2328283-big-trip-20/workflows/Project%20check/badge.svg?branch=master
-[check-url]: https://github.com/htmlacademy-ecmascript/2328283-big-trip-20/actions
+[check-image]: https://github.com/htmlacademy-ecmascript/1918511-big-trip-20/workflows/Project%20check/badge.svg?branch=master
+[check-url]: https://github.com/htmlacademy-ecmascript/1918511-big-trip-20/actions

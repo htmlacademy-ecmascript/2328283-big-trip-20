@@ -12,10 +12,9 @@ module.exports = {
   devtool: 'source-map',
   plugins: [
     new HtmlPlugin({
-      template: 'public/index.html',
+      template: "public/index.html",
     }),
     new CopyPlugin({
-      patterns: [{ from: 'public' }],
       patterns: [
         {
           from: 'public',
@@ -24,7 +23,7 @@ module.exports = {
           },
         },
       ],
-    })
+    }),
   ],
   module: {
     rules: [
