@@ -1,27 +1,29 @@
-import { render, RenderPosition } from './render';
+import FilterView from './view/filter-view.js';
+import SortView from './view/sort-view.js';
 import TripInfoView from './view/trip-info-view.js';
-import TripFiltersView from './view/filters-view.js';
-import TripSortView from './view/sorting-view.js';
-import EventsListView from './view/events-list-view.js';
-import EditFormView from './view/edit-form-view.js';
-import WaypointView from './view/waypoint-view.js';
+import TripFormPresenter from './presenter/trip-form-presenter.js';
+import RoutePointsModel from './model/route-points-model.js';
+import DestinationsModel from './model/destinations-model.js';
+import OffersModel from './model/offers-model.js';
+import { render, RenderPosition } from './framework/render.js';
 
-const tripMainElement = document.querySelector('.trip-main');
-const tripControlsFiltersElement = document.querySelector('.trip-controls__filters');
+const tripInfoContainter = document.querySelector('.trip-main');
+const filterContainer = document.querySelector('.trip-controls__filters');
+const sortContainer = document.querySelector('.trip-events');
 
-render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new TripFiltersView(), tripControlsFiltersElement,RenderPosition.AFTERBEGIN);
+const routePointsModel = new RoutePointsModel();
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
 
-const tripEventsSection = document.querySelector('.trip-events');
+const formPresenter = new TripFormPresenter({
+  routePointListContainer: sortContainer,
+  routePointsModel,
+  destinationsModel,
+  offersModel
+});
 
-render(new TripSortView(), tripEventsSection);
-render(new EventsListView(), tripEventsSection);
+render(new TripInfoView, tripInfoContainter, RenderPosition.AFTERBEGIN);
+render(new FilterView(), filterContainer);
+render(new SortView(), sortContainer);
 
-const eventsListElement = document.querySelector('.trip-events__list');
-
-render(new EditFormView(), eventsListElement, RenderPosition.AFTERBEGIN);
-render(new WaypointView(), eventsListElement);
-render(new WaypointView(), eventsListElement);
-render(new WaypointView(), eventsListElement);
-
-
+formPresenter.init();
