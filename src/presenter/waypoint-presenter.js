@@ -4,6 +4,7 @@ import WaypointView from '../view/waypoint-view.js';
 import EventsListView from '../view/events-list-view.js';
 
 
+
 export default class WaypointPresenter{
   eventComponent = new EventsListView();
 
