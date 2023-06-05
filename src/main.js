@@ -1,27 +1,23 @@
-import { render, RenderPosition } from './render';
-import TripInfoView from './view/trip-info-view.js';
-import TripFiltersView from './view/filters-view.js';
-import TripSortView from './view/sorting-view.js';
-import EventsListView from './view/events-list-view.js';
-import EditFormView from './view/edit-form-view.js';
-import WaypointView from './view/waypoint-view.js';
+
+import FiltersView from './view/filters-view.js';
+import EventsPresenter from './presenter/events-list-presenter.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
+import PointsModel from './model/points-model.js';
+import { render } from './framework/render.js';
+import { generateFilter } from './mocks/filters.js';
 
 const tripMainElement = document.querySelector('.trip-main');
-const tripControlsFiltersElement = document.querySelector('.trip-controls__filters');
+const filtersElement = document.querySelector('.trip-controls__filters');
+const tripEventsElement = document.querySelector('.trip-events');
 
-render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new TripFiltersView(), tripControlsFiltersElement,RenderPosition.AFTERBEGIN);
+const pointsModel = new PointsModel ();
 
-const tripEventsSection = document.querySelector('.trip-events');
+const tripInfoPresenter = new TripInfoPresenter({eventContainer: tripMainElement, pointsModel});
+const eventsPresenter = new EventsPresenter({eventContainer: tripEventsElement, pointsModel});
 
-render(new TripSortView(), tripEventsSection);
-render(new EventsListView(), tripEventsSection);
+const filters = generateFilter(pointsModel.points);
 
-const eventsListElement = document.querySelector('.trip-events__list');
+render (new FiltersView({filters}), filtersElement);
 
-render(new EditFormView(), eventsListElement, RenderPosition.AFTERBEGIN);
-render(new WaypointView(), eventsListElement);
-render(new WaypointView(), eventsListElement);
-render(new WaypointView(), eventsListElement);
-
-
+tripInfoPresenter.init();
+eventsPresenter.init();
