@@ -1,6 +1,6 @@
 import { getRandomData } from '../mock/mocks.js';
 
-const WAYPOINTS_COUNT = 4;
+const WAYPOINTS_COUNT = 5;
 
 
 export default class WaypointsModel {
