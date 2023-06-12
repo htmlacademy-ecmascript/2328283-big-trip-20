@@ -1,23 +1,9 @@
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
+const sortByAsc = (propertyName) => (first, second) => first[propertyName] - second[propertyName];
 
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
+const sortByDesc = (propertyName) => (first, second) => second[propertyName] - first[propertyName];
 
-const createIdGenerator = () => {
-  let lastGeneratedId = 0;
+const getRandomItem = (iterable) => iterable.get([...iterable.keys()][Math.floor(Math.random() * iterable.size)]);
 
-  return function () {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
-};
+const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
 
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
-
-export { getRandomArrayElement, getRandomInteger, createIdGenerator, updateItem };
+export { sortByAsc, sortByDesc, getRandomItem, capitalizeWord };
