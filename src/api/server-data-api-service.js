@@ -37,7 +37,7 @@ export default class ServerDataApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
     const adaptedEvent = this.#adaptServerEventToClient(parsedResponse);
 
-    return adaptedEvent;
+    return adaptedEvent
   }
 
   async updateEvent(event) {
