@@ -6,8 +6,7 @@
   "scripts": {
     "lint": "eslint src/",
     "build": "webpack --mode production",
-    "start": "webpack serve --mode development --open",
-    "deploy": "gh-pages -d build"
+    "start": "webpack serve --mode development --open"
   },
   "devDependencies": {
     "@babel/core": "7.21.4",
@@ -17,7 +16,6 @@
     "css-loader": "6.7.3",
     "eslint": "8.38.0",
     "eslint-config-htmlacademy": "9.0.0",
-    "gh-pages": "5.0.0",
     "html-webpack-plugin": "5.5.1",
     "style-loader": "3.3.2",
     "webpack": "5.79.0",
@@ -36,8 +34,6 @@
   ],
   "dependencies": {
     "dayjs": "1.11.7",
-    "flatpickr": "4.6.13",
-    "he": "1.2.0",
-    "nanoid": "4.0.2"
+    "flatpickr": "4.6.13"
   }
 }
