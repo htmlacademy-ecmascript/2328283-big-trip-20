@@ -1,6 +1,6 @@
 # Проект «Большое путешествие»
 
-* Студент:[Александр Нерсесян](https://up.htmlacademy.ru/javascript/28/user/2328283).
+* Студент:[Александр  Нерсесян](https://up.htmlacademy.ru/javascript/28/user/2328283).
 * Наставник:[Артур Галимов](https://htmlacademy.ru/profile/id1237543).
 
 ---
