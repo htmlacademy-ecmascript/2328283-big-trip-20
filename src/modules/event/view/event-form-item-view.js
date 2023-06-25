@@ -120,6 +120,7 @@ const createButtonsTemplate = (isNewEvent, isDisabled, isDeleting) => isNewEvent
     </button>`);
 
 const createEventsFormItemTemplate = ({ destinations, offerTypes, event }, isNewEvent) => {
+
   const {
     type: eventType,
     offers: eventSelectedOffers,
@@ -133,7 +134,6 @@ const createEventsFormItemTemplate = ({ destinations, offerTypes, event }, isNew
     isSaving,
     isDeleting
   } = event;
-
   return (/*html*/`
     <li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -168,7 +168,7 @@ const createEventsFormItemTemplate = ({ destinations, offerTypes, event }, isNew
             ${createDestinationListTemplate({ destinations, event })}
           </div>
 
-          <div class="event__field-group  event__field-group--time-${eventId}">
+          <div class="event__field-group  event__field-group--time-1">
             <label class="visually-hidden" for="event-start-time">From</label>
             <input
               class="event__input  event__input--time"
@@ -225,24 +225,24 @@ const createEventsFormItemTemplate = ({ destinations, offerTypes, event }, isNew
 
 export default class EventFormItemView extends AbstractStatefulView {
   #data = {};
+  #destinations = null;
   #isNewEvent = null;
-
   #onFormSubmit = null;
   #onButtonClick = null;
   #onRollupButtonClick = null;
-
   #datePickers = {
     dateFrom: null,
     dateTo: null
   };
 
-  constructor({ data: { destinations, offerTypes, event }, onFormSubmit, onButtonClick, onRollupButtonClick, isNewEvent = false }) {
+  constructor({ data: {destinations,offerTypes, event }, onFormSubmit, onButtonClick, onRollupButtonClick, isNewEvent = false }) {
     super();
     this.#data = { destinations, offerTypes, event };
     this.#isNewEvent = isNewEvent;
     this.#onFormSubmit = onFormSubmit;
     this.#onButtonClick = onButtonClick;
     this.#onRollupButtonClick = onRollupButtonClick;
+
 
     this._setState(EventFormItemView.parseEventDataToState(this.#data));
     this._restoreHandlers();
@@ -288,12 +288,10 @@ export default class EventFormItemView extends AbstractStatefulView {
 
     this.element
       .querySelector('.event__input--destination')
-      .addEventListener('change', this.#destinationFieldInputHandler);
-
+      .addEventListener('input', this.#destinationFieldInputHandler);
     this.element
       .querySelector('.event__input--price')
       .addEventListener('input', this.#priceFieldInputHandler);
-
     this.element
       .querySelector('.event--edit')
       .addEventListener('submit', this.#formSubmitHandler);
@@ -348,7 +346,20 @@ export default class EventFormItemView extends AbstractStatefulView {
       type: evt.target.value,
       offerTypeItem: this.#data.offerTypes.get(evt.target.value)
     });
+
   };
+
+
+  // #destinationFieldInputHandler = (evt) => {
+  //   evt.preventDefault();
+  //   const destinationListItem =
+  //   this.#data.destination.find((value) => value.name.toLowerCase() === evt.target.value.toLowerCase());
+  //   if (destinationListItem) {
+  //     this.updateElement({
+  //       destination: destinationListItem.id,
+  //     });
+  //   }
+  // };
 
   #destinationFieldInputHandler = (evt) => {
     const destinationListItem = this.element.querySelector(`#destination-list-${evt.target.dataset.eventId} [value='${evt.target.value}']`);
