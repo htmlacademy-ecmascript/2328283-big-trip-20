@@ -1,83 +1,77 @@
-import {remove, render, RenderPosition} from '../framework/render.js';
-import EditEventView from '../view/edit-view.js';
-import {UserAction, UpdateType} from '../const.js';
+import EditPointView from '../view/edit-point-view.js';
+import {render, remove, RenderPosition} from '../framework/render.js';
+import {UserAction, UpdateType, EditType} from '../const.js';
+
 
 export default class NewPointPresenter {
-  #pointListContainer = null;
-  #handleDataChange = null;
-  #handleDestroy = null;
-  #pointsModel = null;
-  #pointEditComponent = null;
 
-  constructor({newPointModel, pointListContainer, onDataChange, onDestroy}) {
-    this.#pointsModel = newPointModel;
-    this.#pointListContainer = pointListContainer;
+  #container = null;
+  #destinationModel = null;
+  #offersModel = null;
+  #pointsModel = null;
+  #filterModel = null;
+  #pointNewComponent = null;
+  #handleFormSubmit = null;
+  #handleDeleteClick = null;
+  #handleDestroy = null;
+  #handleEscKeyDown = null;
+  #handleDataChange = null;
+  #handleDestroyPresenter = null;
+
+  constructor({container, destinationsModel, offersModel, pointsModel, filterModel, onDataChange, onDestroy}) {
+    this.#container = container;
+    this.#destinationModel = destinationsModel;
+    this.#offersModel = offersModel;
+    this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
     this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
+    this.#handleDestroyPresenter = onDestroy;
+
+    this._eventEditComponent = null;
   }
 
   init() {
-    if (this.#pointEditComponent !== null) {
+    if (this.#pointNewComponent !== null) {
       return;
     }
 
-    this.#pointEditComponent = new EditEventView({
-      offers: this.#pointsModel.offers,
-      destinations: this.#pointsModel.destinations,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
-      onFormExit : this.#handleExitClick,
-      isCreating : true,
+    this.#pointNewComponent = new EditPointView({
+      pointDestinations: this.#destinationModel.get(),
+      offers: this.#offersModel.get(),
+      onFormSubmit: this.#formSubmitHandler,
+      onCloseClick: this.#handleClickClose,
+      typeButton: EditType.CREATING,
+      getOffersByType: (type) => this.#offersModel.getByType(type),
+      getDestinationById: (destination) => this.#destinationModel.getById(destination),
+      getDestinationByCity: (city) => this.#destinationModel.getByCity(city)
     });
 
-    render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#pointNewComponent, this.#container, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  destroy() {
-    if (this.#pointEditComponent === null) {
+  destroy () {
+    if (this.#pointNewComponent === null) {
       return;
     }
-
-    this.#handleDestroy();
-
-    remove(this.#pointEditComponent);
-    this.#pointEditComponent = null;
+    this.#handleDestroyPresenter();
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
+    remove(this.#pointNewComponent);
+    this.#pointNewComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  setSaving() {
-    this.#pointEditComponent.updateElement({
-      isDisabled: true,
-      isSaving: true,
-      isCreating: true,
-    });
-  }
-
-  setAborting() {
-    const resetFormState = () => {
-      this.#pointEditComponent.updateElement({
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-        isCreating: false,
-      });
-    };
-
-    this.#pointEditComponent.shake(resetFormState);
-  }
-
-  #handleFormSubmit = (point) => {
+  #formSubmitHandler = (point) => {
     this.#handleDataChange(
-      UserAction.ADD_POINT,
+      UserAction.CREATE_POINT,
       UpdateType.MINOR,
-      point,
+      {...point},
     );
   };
 
-  #handleDeleteClick = () => {
+  #handleClickClose = () => {
     this.destroy();
   };
 
@@ -88,7 +82,21 @@ export default class NewPointPresenter {
     }
   };
 
-  #handleExitClick = () => {
-    this.destroy();
-  };
+  setSaving() {
+    this.#pointNewComponent.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointNewComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this.#pointNewComponent.shake(resetFormState);
+  }
 }
