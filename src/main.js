@@ -1,44 +1,57 @@
-import { generateAuthToken } from './utils/api.js';
-import { END_POINT } from './const.js';
+import HeaderView from './view/header-view.js';
+import {RenderPosition, render} from './framework/render.js';
+import NewPointButtonView from './view/new-point-button-view.js';
 
-const authToken = generateAuthToken();
+import MainPresenter from './presenter/main-presenter.js';
 
-import ServerDataApiService from './api/server-data-api-service.js';
+import PointsModel from './model/points-model.js';
 
-import DestinationsModel from './model/destinations-model.js';
-import OfferTypesModel from './model/offer-types-model.js';
-import EventsModel from './model/events-model.js';
-import FiltersModel from './model/filters-model.js';
+import FilterModel from './model/filter-model.js';
+import FilterPresenter from './presenter/filter-presenter.js';
+import PointsApiService from './points-api-service.js';
 
-import TripMainPresenter from './modules/trip-main/presenter/trip-main-presenter.js';
-import FiltersPresenter from './modules/filters/presenter/filters-presenter.js';
-import NewEventPresenter from './modules/new-event/presenter/new-event-presenter.js';
-import EventsBoardPresenter from './modules/events-board/presenter/events-board-presenter.js';
+const AUTHORIZATION = 'Basic svsld49thbne45b';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
-const destinationsModel = new DestinationsModel({ serverDataApiService: new ServerDataApiService(END_POINT, authToken) });
-const offerTypesModel = new OfferTypesModel({ serverDataApiService: new ServerDataApiService(END_POINT, authToken) });
-const eventsModel = new EventsModel({ serverDataApiService: new ServerDataApiService(END_POINT, authToken) });
-const filtersModel = new FiltersModel();
+const siteFilterElement = document.querySelector('.trip-controls__filters');
+const siteHeaderElement = document.querySelector('.trip-main');
+const siteMainElement = document.querySelector('.trip-events');
 
-const tripMainPresenter = new TripMainPresenter({ destinationsModel, offerTypesModel, eventsModel });
-const filtersPresenter = new FiltersPresenter({ eventsModel, filtersModel });
-const eventsBoardPresenter = new EventsBoardPresenter({ destinationsModel, offerTypesModel, eventsModel, filtersModel });
-const newEventPresenter = new NewEventPresenter({
-  destinationsModel: destinationsModel,
-  offerTypesModel: offerTypesModel,
-  filtersModel: filtersModel,
-  boardPresenter: eventsBoardPresenter,
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+const filterModel = new FilterModel();
+const mainPresenter = new MainPresenter({
+  container: siteMainElement,
+  pointsModel,
+  filterModel,
+  onNewPointDestroy: handleNewPointFormClose
 });
 
-tripMainPresenter.init();
-filtersPresenter.init();
-newEventPresenter.init();
-eventsBoardPresenter.init({ newEventPresenter });
+const filterPresenter = new FilterPresenter({
+  filterContainer: siteFilterElement,
+  filterModel,
+  pointsModel,
+});
 
-Promise.all([destinationsModel.init(), offerTypesModel.init()])
-  .then(() => eventsModel.init())
-  .then(() => newEventPresenter.activateNewEventButton())
-  .catch(((error) => {
-    eventsBoardPresenter.clearEventsBoard();
-    eventsBoardPresenter.renderEventsBoardMessage({ error });
-  }));
+const newPointButtonComponent = new NewPointButtonView({
+  onClick: handleNewPointButtonClick
+});
+
+function handleNewPointFormClose() {
+  newPointButtonComponent.element.disabled = false;
+}
+
+function handleNewPointButtonClick() {
+  mainPresenter.createPoint();
+  newPointButtonComponent.element.disabled = true;
+}
+
+render(new HeaderView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
+
+filterPresenter.init();
+mainPresenter.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, siteHeaderElement, RenderPosition.BEFOREEND);
+  });
