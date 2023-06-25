@@ -1,16 +1,20 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-const HtmlPlugin = require('html-webpack-plugin');
+import { fileURLToPath } from 'url';
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlPlugin from 'html-webpack-plugin';
+import { dirname, resolve } from 'path';
 
-module.exports = {
-  entry: './src/main.js', // Точка входа
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
+  entry: './src/main.js',
   output: {
-    filename: 'bundle.[contenthash].js', // Имя бандла
-    path: path.resolve(__dirname, 'build'), // Директория для файлов сборки
-    clean: true, // Удаляем предыдущую сборку перед созданием новой
+    filename: 'bundle.[contenthash].js',
+    path: resolve(__dirname, 'build'),
+    clean: true,
   },
-  devtool: 'source-map', // Генерируем карту исходного кода
-  plugins: [ // Подключаем плагины
+  devtool: 'source-map',
+  plugins: [
     new HtmlPlugin({
       template: 'public/index.html',
     }),
@@ -26,7 +30,7 @@ module.exports = {
     }),
   ],
   module: {
-    rules: [ // Добавляем лоадеры
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
@@ -40,7 +44,7 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader']
-      },
-    ],
-  },
+      }
+    ]
+  }
 };

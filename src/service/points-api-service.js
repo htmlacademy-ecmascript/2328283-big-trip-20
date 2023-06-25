@@ -1,4 +1,4 @@
-import ApiService from './framework/api-service.js';
+import ApiService from '../framework/api-service.js';
 
 const Method = {
   GET: 'GET',
@@ -8,18 +8,18 @@ const Method = {
 };
 
 export default class PointsApiService extends ApiService {
-  get points() {
-    return this._load({url: 'points'})
-      .then(ApiService.parseResponse);
-  }
-
-  get destinations() {
+  getDestinations() {
     return this._load({url: 'destinations'})
       .then(ApiService.parseResponse);
   }
 
-  get offers() {
+  getOffers() {
     return this._load({url: 'offers'})
+      .then(ApiService.parseResponse);
+  }
+
+  getPoints() {
+    return this._load({url: 'points'})
       .then(ApiService.parseResponse);
   }
 
@@ -60,17 +60,17 @@ export default class PointsApiService extends ApiService {
 
   #adaptToServer(point) {
     const adaptedPoint = {...point,
-      'date_from': point.dateFrom,
-      'date_to': point.dateTo,
-      'base_price': Number(point.price),
+      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
+      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null, // На сервере дата хранится в ISO формате
       'is_favorite': point.isFavorite,
+      'base_price': point.basePrice
     };
 
     // Ненужные ключи мы удаляем
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
-    delete adaptedPoint.price;
     delete adaptedPoint.isFavorite;
+    delete adaptedPoint.basePrice;
 
     return adaptedPoint;
   }

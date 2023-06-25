@@ -1,18 +1,9 @@
-const TYPES_OF_POINT = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-
-const POINT_COUNT = 5;
-
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PRESENT: 'present',
-  PAST: 'past',
-};
-
 const SortType = {
-  DEFAULT: 'default',
+  DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
+  OFFERS: 'offers'
 };
 
 const UserAction = {
@@ -25,7 +16,15 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
-  INIT: 'INIT',
+  INIT: 'INIT'
 };
 
-export {TYPES_OF_POINT, POINT_COUNT, FilterType, SortType, UserAction, UpdateType};
+const EditType = {
+  EDITING: 'EDITING',
+  CREATING: 'CREATING'
+};
+
+const DESTINATION_ITEMS_LENGTH = 2;
+
+
+export {SortType, UserAction, UpdateType, EditType, DESTINATION_ITEMS_LENGTH};
